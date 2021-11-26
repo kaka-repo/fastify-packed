@@ -54,7 +54,7 @@
     "env-schema": "^3.4.0",
     "fastify-cors": "^6.0.2",
     "fastify-helmet": "^5.3.2",
-    "fastify-jwt": "^3.2.1",
+    "fastify-jwt": "^4.0.0",
     "fastify-mongodb": "^4.1.1",
     "fastify-swagger": "^4.12.6",
     "under-pressure": "^5.8.0"
