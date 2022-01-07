@@ -19,13 +19,16 @@ function requireOptionalDependency<T> (name: string): T | false {
   }
 }
 
-function checkEnable<T> (option?: true | T): boolean {
+function checkEnable<T> (option?: boolean | T): boolean {
   return option === true || (typeof option === 'object' && option !== null && !Array.isArray(option)) || typeof option === 'function'
 }
 
-function parseOption<T> (option: true | T, def: T): T {
+function parseOption<T> (option: boolean | T, def: T): T {
   if (option === true) {
     return def
+  } else if (option === false) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return {} as T
   } else if (typeof option === 'function') {
     return option()
   } else {
@@ -36,14 +39,14 @@ function parseOption<T> (option: true | T, def: T): T {
 type ExtractGeneric<T> = T extends FastifyPluginCallback<infer X> ? X : T extends FastifyPluginAsync<infer Y> ? Y : never
 
 export interface FastifyPackedOption extends Object {
-  env?: true | EnvSchemaOpt
-  cors?: true | FastifyRegisterOptions<FastifyCorsOptions>
-  helmet?: true | FastifyRegisterOptions<ExtractGeneric<typeof FastifyHelmet>>
-  underPressure?: true | FastifyRegisterOptions<ExtractGeneric<typeof UnderPressure>>
+  env?: boolean | EnvSchemaOpt
+  cors?: boolean | FastifyRegisterOptions<FastifyCorsOptions>
+  helmet?: boolean | FastifyRegisterOptions<ExtractGeneric<typeof FastifyHelmet>>
+  underPressure?: boolean | FastifyRegisterOptions<ExtractGeneric<typeof UnderPressure>>
 
-  jwt?: FastifyRegisterOptions<ExtractGeneric<typeof FastifyJWT>>
-  mongodb?: FastifyRegisterOptions<ExtractGeneric<typeof FastifyMongoDB>>
-  swagger?: FastifyRegisterOptions<ExtractGeneric<typeof FastifSwagger>>
+  jwt?: boolean | FastifyRegisterOptions<ExtractGeneric<typeof FastifyJWT>>
+  mongodb?: boolean | FastifyRegisterOptions<ExtractGeneric<typeof FastifyMongoDB>>
+  swagger?: boolean | FastifyRegisterOptions<ExtractGeneric<typeof FastifSwagger>>
 }
 
 export function version (): string {
