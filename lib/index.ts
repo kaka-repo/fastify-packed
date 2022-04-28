@@ -171,7 +171,11 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
 
   function overrideVersion (plugin: any): void {
     if (typeof options?.overrideVersion === 'string') {
-      plugin[Symbol.for('')] = options.overrideVersion
+      const meta = plugin[Symbol.for('plugin-meta')] ?? {}
+      plugin[Symbol.for('plugin-meta')] = {
+        ...meta,
+        fastify: options.overrideVersion
+      }
     }
   }
 }
