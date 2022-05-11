@@ -53,7 +53,7 @@
   "optionalDependencies": {
     "env-schema": "^4.0.0",
     "@fastify/cors": "^7.0.0",
-    "@fastify/helmet": "^8.0.0",
+    "@fastify/helmet": "^9.0.0",
     "@fastify/jwt": "^5.0.0",
     "@fastify/mongodb": "^5.0.0",
     "@fastify/swagger": "^6.0.0",
