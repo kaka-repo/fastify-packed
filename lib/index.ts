@@ -131,8 +131,8 @@ const createPacked = function (): FastifyPluginAsync<FastifyPackedOption> {
 
     // rate limit
     if (checkEnable(options.underPressure)) {
-      const underPressure = requireOptionalDependency<typeof UnderPressure>('under-pressure')
-      if (underPressure === false) throw Error('please install under-pressure with the following command:\nnpm install under-pressure\nyarn add under-pressure')
+      const underPressure = requireOptionalDependency<typeof UnderPressure>('@fastify/under-pressure')
+      if (underPressure === false) throw Error('please install @fastify/under-pressure with the following command:\nnpm install @fastify/under-pressure\nyarn add @fastify/under-pressure')
       const opt = parseOption(options.underPressure, {
         maxEventLoopDelay: 1000,
         message: 'System is under pressure, please try again later.',
