@@ -70,11 +70,7 @@ export interface CreatedPackedPlugin {
   env: EnvSchemaData
 }
 
-export interface CreatePackedOption {
-  overrideVersion?: string
-}
-
-export function createPackedPlugin (envOptions?: true | EnvSchemaOpt, options?: CreatePackedOption): CreatedPackedPlugin {
+export function createPackedPlugin (envOptions?: true | EnvSchemaOpt): CreatedPackedPlugin {
   // environment variables
   let env: EnvSchemaData = {}
   if (checkEnable(envOptions)) {
@@ -85,7 +81,7 @@ export function createPackedPlugin (envOptions?: true | EnvSchemaOpt, options?: 
   }
 
   return {
-    plugin: FastifyPlugin(createPacked(options), {
+    plugin: FastifyPlugin(createPacked(), {
       fastify: '3.x',
       name: 'fastify-packed',
       dependencies: []
@@ -95,7 +91,7 @@ export function createPackedPlugin (envOptions?: true | EnvSchemaOpt, options?: 
   }
 }
 
-const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync<FastifyPackedOption> {
+const createPacked = function (): FastifyPluginAsync<FastifyPackedOption> {
   return async function Packed (fastify, options) {
     options = options ?? {}
 
@@ -113,7 +109,6 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.cors)) {
       const fastifyCORS = requireOptionalDependency<typeof FastifyCORS>('@fastify/cors')
       if (fastifyCORS === false) throw Error('please install @fastify/cors with the following command:\nnpm install @fastify/cors\nyarn add @fastify/cors')
-      overrideVersion(fastifyCORS)
       const opt = parseOption(options.cors, { origin: true })
       await fastify.register(fastifyCORS, opt)
     }
@@ -122,7 +117,6 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.swagger)) {
       const fastifySwagger = requireOptionalDependency<typeof FastifSwagger>('@fastify/swagger')
       if (fastifySwagger === false) throw Error('please install @fastify/swagger with the following command:\nnpm install @fastify/swagger\nyarn add @fastify/swagger')
-      overrideVersion(fastifySwagger)
       const opt = parseOption(options.swagger, { })
       await fastify.register(fastifySwagger, opt)
     }
@@ -131,7 +125,6 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.helmet)) {
       const fastifyHelmet = requireOptionalDependency<typeof FastifyHelmet>('@fastify/helmet')
       if (fastifyHelmet === false) throw Error('please install @fastify/helmet with the following command:\nnpm install @fastify/helmet\nyarn add @fastify/helmet')
-      overrideVersion(fastifyHelmet)
       const opt = parseOption(options.helmet, { contentSecurityPolicy: fastifyHelmet.contentSecurityPolicy.getDefaultDirectives() })
       await fastify.register(fastifyHelmet, opt)
     }
@@ -140,7 +133,6 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.underPressure)) {
       const underPressure = requireOptionalDependency<typeof UnderPressure>('under-pressure')
       if (underPressure === false) throw Error('please install under-pressure with the following command:\nnpm install under-pressure\nyarn add under-pressure')
-      overrideVersion(underPressure)
       const opt = parseOption(options.underPressure, {
         maxEventLoopDelay: 1000,
         message: 'System is under pressure, please try again later.',
@@ -154,7 +146,6 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.jwt)) {
       const fastifyJWT = requireOptionalDependency<typeof FastifyJWT>('@fastify/jwt')
       if (fastifyJWT === false) throw Error('please install @fastify/jwt with the following command:\nnpm install @fastify/jwt\nyarn add @fastify/jwt')
-      overrideVersion(fastifyJWT)
       const opt = parseOption(options.jwt, { secret: crypto.randomBytes(8).toString('hex') })
       await fastify.register(fastifyJWT, opt)
     }
@@ -163,19 +154,8 @@ const createPacked = function (options?: CreatePackedOption): FastifyPluginAsync
     if (checkEnable(options.mongodb)) {
       const fastifyMongoDB = requireOptionalDependency<typeof FastifyMongoDB>('@fastify/mongodb')
       if (fastifyMongoDB === false) throw Error('please install @fastify/mongodb with the following command:\nnpm install @fastify/mongodb\nyarn add @fastify/mongodb')
-      overrideVersion(fastifyMongoDB)
       const opt = parseOption(options.mongodb, { url: 'mongodb://127.0.0.1:27017', database: 'default' })
       await fastify.register(fastifyMongoDB, opt)
-    }
-  }
-
-  function overrideVersion (plugin: any): void {
-    if (typeof options?.overrideVersion === 'string') {
-      const meta = plugin[Symbol.for('plugin-meta')] ?? {}
-      plugin[Symbol.for('plugin-meta')] = {
-        ...meta,
-        fastify: options.overrideVersion
-      }
     }
   }
 }
