@@ -3,13 +3,13 @@ import type { default as FastifyHelmet } from '@fastify/helmet'
 import type { default as FastifyJWT } from '@fastify/jwt'
 import type { default as FastifyMongoDB } from '@fastify/mongodb'
 import type { default as FastifSwagger } from '@fastify/swagger'
+import type { default as UnderPressure } from '@fastify/under-pressure'
 import * as crypto from 'crypto'
 import type { default as EnvSchema, EnvSchemaData, EnvSchemaOpt } from 'env-schema'
 import { FastifyPluginAsync, FastifyPluginCallback, FastifyRegisterOptions } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
 import * as fs from 'fs'
 import * as path from 'path'
-import type { default as UnderPressure } from 'under-pressure'
 
 function requireOptionalDependency<T> (name: string): T | false {
   try {
@@ -161,7 +161,7 @@ const createPacked = function (): FastifyPluginAsync<FastifyPackedOption> {
 }
 
 export const FastifyPacked = FastifyPlugin(createPacked(), {
-  fastify: '3.x',
+  fastify: '4.x',
   name: '@kakang/fastify-packed',
   dependencies: []
 })
