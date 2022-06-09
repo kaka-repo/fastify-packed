@@ -82,7 +82,7 @@ export function createPackedPlugin (envOptions?: true | EnvSchemaOpt): CreatedPa
 
   return {
     plugin: FastifyPlugin(createPacked(), {
-      fastify: '3.x',
+      fastify: '4.x',
       name: 'fastify-packed',
       dependencies: []
     }),
